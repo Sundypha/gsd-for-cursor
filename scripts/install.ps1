@@ -80,8 +80,9 @@ if ((Test-Path $existingGSD) -and -not $Force) {
 Write-Host "Creating directory structure..." -ForegroundColor Cyan
 
 $directories = @(
-    "commands\gsd",
+    "commands",
     "agents",
+    "get-shit-done\bin\lib",
     "get-shit-done\workflows",
     "get-shit-done\templates",
     "get-shit-done\templates\codebase",
@@ -103,8 +104,9 @@ foreach ($dir in $directories) {
 Write-Host "`nCopying files..." -ForegroundColor Cyan
 
 $fileMappings = @(
-    @{ Source = "commands\gsd"; Dest = "commands\gsd" },
+    @{ Source = "commands"; Dest = "commands" },
     @{ Source = "agents"; Dest = "agents" },
+    @{ Source = "bin"; Dest = "get-shit-done\bin" },
     @{ Source = "workflows"; Dest = "get-shit-done\workflows" },
     @{ Source = "templates"; Dest = "get-shit-done\templates" },
     @{ Source = "references"; Dest = "get-shit-done\references" },

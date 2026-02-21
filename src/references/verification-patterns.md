@@ -1,4 +1,4 @@
-﻿# Verification Patterns
+# Verification Patterns
 
 How to verify different types of artifacts are real implementations, not stubs or placeholders.
 

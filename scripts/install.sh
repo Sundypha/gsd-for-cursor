@@ -92,8 +92,9 @@ fi
 echo -e "${CYAN}Creating directory structure...${NC}"
 
 directories=(
-    "commands/gsd"
+    "commands"
     "agents"
+    "get-shit-done/bin/lib"
     "get-shit-done/workflows"
     "get-shit-done/templates"
     "get-shit-done/templates/codebase"
@@ -148,14 +149,19 @@ copy_dir() {
 }
 
 # Copy each directory
-if [ -d "$SOURCE_PATH/commands/gsd" ]; then
-    copy_dir "$SOURCE_PATH/commands/gsd" "$CURSOR_DIR/commands/gsd" "commands/gsd"
-    file_count=$((file_count + $(find "$SOURCE_PATH/commands/gsd" -type f 2>/dev/null | wc -l)))
+if [ -d "$SOURCE_PATH/commands" ]; then
+    copy_dir "$SOURCE_PATH/commands" "$CURSOR_DIR/commands" "commands"
+    file_count=$((file_count + $(find "$SOURCE_PATH/commands" -type f 2>/dev/null | wc -l)))
 fi
 
 if [ -d "$SOURCE_PATH/agents" ]; then
     copy_dir "$SOURCE_PATH/agents" "$CURSOR_DIR/agents" "agents"
     file_count=$((file_count + $(find "$SOURCE_PATH/agents" -type f 2>/dev/null | wc -l)))
+fi
+
+if [ -d "$SOURCE_PATH/bin" ]; then
+    copy_dir "$SOURCE_PATH/bin" "$CURSOR_DIR/get-shit-done/bin" "bin (gsd-tools)"
+    file_count=$((file_count + $(find "$SOURCE_PATH/bin" -type f 2>/dev/null | wc -l)))
 fi
 
 if [ -d "$SOURCE_PATH/workflows" ]; then

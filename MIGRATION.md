@@ -196,35 +196,38 @@ Select-String -Path "src/**/*.md" -Pattern "allowed-tools" -Recurse
 
 ## File-by-File Checklist
 
-### Commands (27 files)
+### Commands (30 files, flat in commands/)
 
-- [ ] `commands/gsd/new-project.md`
-- [ ] `commands/gsd/plan-phase.md`
-- [ ] `commands/gsd/execute-phase.md`
-- [ ] `commands/gsd/verify-work.md`
-- [ ] `commands/gsd/discuss-phase.md`
-- [ ] `commands/gsd/research-phase.md`
-- [ ] `commands/gsd/progress.md`
-- [ ] `commands/gsd/help.md`
-- [ ] `commands/gsd/settings.md`
-- [ ] `commands/gsd/update.md`
-- [ ] `commands/gsd/quick.md`
-- [ ] `commands/gsd/debug.md`
-- [ ] `commands/gsd/add-phase.md`
-- [ ] `commands/gsd/insert-phase.md`
-- [ ] `commands/gsd/remove-phase.md`
-- [ ] `commands/gsd/add-todo.md`
-- [ ] `commands/gsd/check-todos.md`
-- [ ] `commands/gsd/pause-work.md`
-- [ ] `commands/gsd/resume-work.md`
-- [ ] `commands/gsd/map-codebase.md`
-- [ ] `commands/gsd/new-milestone.md`
-- [ ] `commands/gsd/complete-milestone.md`
-- [ ] `commands/gsd/audit-milestone.md`
-- [ ] `commands/gsd/plan-milestone-gaps.md`
-- [ ] `commands/gsd/list-phase-assumptions.md`
-- [ ] `commands/gsd/set-profile.md`
-- [ ] `commands/gsd/join-discord.md`
+- [ ] `commands/gsd-new-project.md`
+- [ ] `commands/gsd-plan-phase.md`
+- [ ] `commands/gsd-execute-phase.md`
+- [ ] `commands/gsd-verify-work.md`
+- [ ] `commands/gsd-discuss-phase.md`
+- [ ] `commands/gsd-research-phase.md`
+- [ ] `commands/gsd-progress.md`
+- [ ] `commands/gsd-help.md`
+- [ ] `commands/gsd-settings.md`
+- [ ] `commands/gsd-update.md`
+- [ ] `commands/gsd-quick.md`
+- [ ] `commands/gsd-debug.md`
+- [ ] `commands/gsd-add-phase.md`
+- [ ] `commands/gsd-insert-phase.md`
+- [ ] `commands/gsd-remove-phase.md`
+- [ ] `commands/gsd-add-todo.md`
+- [ ] `commands/gsd-check-todos.md`
+- [ ] `commands/gsd-pause-work.md`
+- [ ] `commands/gsd-resume-work.md`
+- [ ] `commands/gsd-map-codebase.md`
+- [ ] `commands/gsd-new-milestone.md`
+- [ ] `commands/gsd-complete-milestone.md`
+- [ ] `commands/gsd-audit-milestone.md`
+- [ ] `commands/gsd-plan-milestone-gaps.md`
+- [ ] `commands/gsd-list-phase-assumptions.md`
+- [ ] `commands/gsd-set-profile.md`
+- [ ] `commands/gsd-join-discord.md`
+- [ ] `commands/gsd-cleanup.md`
+- [ ] `commands/gsd-health.md`
+- [ ] `commands/gsd-reapply-patches.md`
 
 ### Agents (11 files)
 
@@ -265,10 +268,16 @@ Select-String -Path "src/**/*.md" -Pattern "allowed-tools" -Recurse
 
 - [ ] All files in `references/`
 
-### Hooks (2 files)
+### Hooks (3 files)
 
 - [ ] `hooks/gsd-statusline.js`
 - [ ] `hooks/gsd-check-update.js`
+- [ ] `hooks/gsd-context-monitor.js`
+
+### Bin Tools (copied as-is, no conversion needed)
+
+- [ ] `bin/gsd-tools.cjs`
+- [ ] `bin/lib/*.cjs` (11 modules)
 
 ## Troubleshooting
 
@@ -280,7 +289,7 @@ Select-String -Path "src/**/*.md" -Pattern "allowed-tools" -Recurse
 - Verify tools object syntax
 
 **Issue: Commands not appearing in Cursor**
-- Verify files are in `~/.cursor/commands/gsd/`
+- Verify files are in `~/.cursor/commands/` (flat, named `gsd-*.md`)
 - Check file has `.md` extension
 - Restart Cursor
 

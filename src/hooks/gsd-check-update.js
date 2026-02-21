@@ -9,12 +9,12 @@ const { spawn } = require('child_process');
 
 const homeDir = os.homedir();
 const cwd = process.cwd();
-const cacheDir = path.join(homeDir, '.claude', 'cache');
+const cacheDir = path.join(homeDir, '.cursor', 'cache');
 const cacheFile = path.join(cacheDir, 'gsd-update-check.json');
 
 // VERSION file locations (check project first, then global)
-const projectVersionFile = path.join(cwd, '.claude', 'get-shit-done', 'VERSION');
-const globalVersionFile = path.join(homeDir, '.claude', 'get-shit-done', 'VERSION');
+const projectVersionFile = path.join(cwd, '.cursor', 'get-shit-done', 'VERSION');
+const globalVersionFile = path.join(homeDir, '.cursor', 'get-shit-done', 'VERSION');
 
 // Ensure cache directory exists
 if (!fs.existsSync(cacheDir)) {
@@ -55,7 +55,8 @@ const child = spawn(process.execPath, ['-e', `
   fs.writeFileSync(cacheFile, JSON.stringify(result));
 `], {
   stdio: 'ignore',
-  windowsHide: true
+  windowsHide: true,
+  detached: true  // Required on Windows for proper process detachment
 });
 
 child.unref();

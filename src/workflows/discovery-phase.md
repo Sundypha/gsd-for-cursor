@@ -1,4 +1,4 @@
-﻿<purpose>
+<purpose>
 Execute discovery at the appropriate depth level.
 Produces DISCOVERY.md (for Level 2-3) that informs PLAN.md creation.
 
@@ -216,7 +216,7 @@ After creating DISCOVERY.md, check confidence level.
 If confidence is LOW:
 Use ask_question:
 
-- header: "Low Confidence"
+- header: "Low Conf."
 - question: "Discovery confidence is LOW: [reason]. How would you like to proceed?"
 - options:
   - "Dig deeper" - Do more research before planning

@@ -43,12 +43,12 @@ This is the **Cursor IDE adaptation** of the [Get Shit Done (GSD)](https://githu
 ### Basic Workflow
 
 ```
-/gsd/map-codebase     # Map existing codebase ? when needed
-/gsd/new-project      # Initialize project with questioning → research → requirements → roadmap
-/gsd/discuss-phase 1  # Capture implementation decisions
-/gsd/plan-phase 1     # Create executable plans
-/gsd/execute-phase 1  # Execute plans with atomic commits
-/gsd/verify-work 1    # User acceptance testing
+/gsd-map-codebase     # Map existing codebase — when needed
+/gsd-new-project      # Initialize project with questioning → research → requirements → roadmap
+/gsd-discuss-phase 1  # Capture implementation decisions
+/gsd-plan-phase 1     # Create executable plans
+/gsd-execute-phase 1  # Execute plans with atomic commits
+/gsd-verify-work 1    # User acceptance testing
 ```
 
 ## Documentation
@@ -74,8 +74,9 @@ gsd-for-cursor/
 │   ├── migrate.ps1              # Windows migration script
 │   └── migrate.sh               # macOS/Linux migration script
 └── src/
-    ├── commands/                # Adapted slash commands
+    ├── commands/                # Slash commands (flat gsd-*.md files)
     ├── agents/                  # Adapted agent definitions
+    ├── bin/                     # CLI tools (gsd-tools.cjs + lib/)
     ├── workflows/               # Workflow documents
     ├── templates/               # Output templates
     ├── references/              # Deep guidance documents
@@ -86,11 +87,46 @@ gsd-for-cursor/
 
 | Aspect | Claude Code | Cursor |
 |--------|-------------|--------|
-| Command prefix | `/gsd:command` | `/gsd/command` |
+| Command prefix | `/gsd:command` | `/gsd-command` |
 | Config directory | `~/.claude/` | `~/.cursor/` |
 | Tool names | PascalCase (`Read`) | snake_case (`read`) |
 | Tools frontmatter | `allowed-tools: [Read, Write]` | `tools: { read: true, write: true }` |
 | Colors | Names (`yellow`) | Hex (`#FFFF00`) |
+
+## Devcontainer Support
+
+GSD installs to `~/.cursor/` on the host. To make it available inside devcontainers without modifying shared project config, use the **dotfiles repository** approach -- a standard mechanism that Cursor/VS Code provides for personal tooling.
+
+### Setup (one-time)
+
+1. Create a personal dotfiles repo (e.g., `your-github-id/dotfiles`) with an `install.sh` that clones and installs GSD:
+
+```bash
+#!/bin/bash
+# install.sh in your dotfiles repo
+GSD_REPO="https://github.com/user/gsd-for-cursor.git"
+GSD_DIR="/tmp/gsd-for-cursor"
+
+if command -v node &> /dev/null; then
+    git clone --depth 1 "$GSD_REPO" "$GSD_DIR" 2>/dev/null
+    if [ -d "$GSD_DIR" ]; then
+        bash "$GSD_DIR/scripts/install.sh" --force
+        rm -rf "$GSD_DIR"
+    fi
+fi
+```
+
+2. Add these settings to your **personal** Cursor settings (not the project):
+
+```json
+{
+    "dotfiles.repository": "your-github-id/dotfiles",
+    "dotfiles.installCommand": "install.sh",
+    "dotfiles.targetPath": "~/dotfiles"
+}
+```
+
+Every new devcontainer will now auto-install GSD without affecting teammates who don't use Cursor or GSD.
 
 ## Migration from GSD Master
 

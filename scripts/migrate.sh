@@ -203,6 +203,8 @@ convert_file() {
     content=$(echo "$content" | sed 's|\.claude/|.cursor/|g')
     content=$(echo "$content" | sed 's|@~/.claude/get-shit-done/|@~/.cursor/get-shit-done/|g')
     content=$(echo "$content" | sed 's|\$CLAUDE_PROJECT_DIR|\${workspaceFolder}|g')
+    # JS string literals: '.claude' -> '.cursor' (used in path.join calls in hooks)
+    content=$(echo "$content" | sed "s|'\.claude'|'.cursor'|g")
     
     # Command references
     content=$(echo "$content" | sed 's|/gsd:|/gsd-|g')
@@ -279,13 +281,14 @@ main() {
         echo ""
     fi
     
-    # Process commands
+    # Process commands (flatten from commands/gsd/<name>.md to commands/gsd-<name>.md)
     log_info "Processing commands..."
     if [ -d "$SOURCE_PATH/commands/gsd" ]; then
         for file in "$SOURCE_PATH/commands/gsd"/*.md; do
             if [ -f "$file" ]; then
                 filename=$(basename "$file")
-                dest="$OUTPUT_PATH/commands/gsd/$filename"
+                flat_name="gsd-$filename"
+                dest="$OUTPUT_PATH/commands/$flat_name"
                 if convert_file "$file" "$dest" "command"; then
                     ((CONVERTED++)) || CONVERTED=$((CONVERTED + 1))
                 else
@@ -376,6 +379,24 @@ main() {
                 fi
             fi
         done
+    fi
+    
+    # Copy bin directory (gsd-tools.cjs + lib/) — path-agnostic, no conversion needed
+    log_info ""
+    log_info "Copying bin tools..."
+    if [ -d "$SOURCE_PATH/get-shit-done/bin" ]; then
+        mkdir -p "$OUTPUT_PATH/bin/lib"
+        find "$SOURCE_PATH/get-shit-done/bin" -type f | while read -r file; do
+            relative_path="${file#$SOURCE_PATH/get-shit-done/bin/}"
+            dest="$OUTPUT_PATH/bin/$relative_path"
+            dest_folder="$(dirname "$dest")"
+            mkdir -p "$dest_folder"
+            cp "$file" "$dest"
+            ((COPIED++)) 2>/dev/null || COPIED=$((COPIED + 1))
+        done
+        log_info "  Copied bin tools (gsd-tools.cjs + lib/)"
+    else
+        log_skip "  bin directory not found at: $SOURCE_PATH/get-shit-done/bin"
     fi
     
     # Summary

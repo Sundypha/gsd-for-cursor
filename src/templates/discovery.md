@@ -1,4 +1,4 @@
-﻿# Discovery Template
+# Discovery Template
 
 Template for `.planning/phases/XX-name/DISCOVERY.md` - shallow research for library/option decisions.
 

@@ -89,6 +89,8 @@ function Convert-PathReferences {
     $content = $content -replace '\.claude/', '.cursor/'
     $content = $content -replace '@~/.claude/get-shit-done/', '@~/.cursor/get-shit-done/'
     $content = $content -replace '\$CLAUDE_PROJECT_DIR', '${workspaceFolder}'
+    # JS string literals: '.claude' -> '.cursor' (used in path.join calls in hooks)
+    $content = $content -replace "'\.claude'", "'.cursor'"
     
     return $content
 }
@@ -269,12 +271,13 @@ function Main {
         Errors = 0
     }
     
-    # Process commands
+    # Process commands (flatten from commands/gsd/<name>.md to commands/gsd-<name>.md)
     Write-Info "Processing commands..."
     $commandsPath = Join-Path $SourcePath "commands\gsd"
     if (Test-Path $commandsPath) {
         Get-ChildItem -Path $commandsPath -Filter "*.md" | ForEach-Object {
-            $destPath = Join-Path $OutputPath "commands\gsd\$($_.Name)"
+            $flatName = "gsd-$($_.Name)"
+            $destPath = Join-Path $OutputPath "commands\$flatName"
             try {
                 if (Convert-File -sourcePath $_.FullName -destPath $destPath -fileType "command") {
                     $stats.Converted++
@@ -388,6 +391,33 @@ function Main {
                 $stats.Errors++
             }
         }
+    }
+    
+    # Copy bin directory (gsd-tools.cjs + lib/) — path-agnostic, no conversion needed
+    Write-Info "`nCopying bin tools..."
+    $binPath = Join-Path $SourcePath "get-shit-done\bin"
+    if (Test-Path $binPath) {
+        $binDestPath = Join-Path $OutputPath "bin"
+        if (-not (Test-Path $binDestPath)) {
+            New-Item -ItemType Directory -Path $binDestPath -Force | Out-Null
+        }
+        $libDestPath = Join-Path $binDestPath "lib"
+        if (-not (Test-Path $libDestPath)) {
+            New-Item -ItemType Directory -Path $libDestPath -Force | Out-Null
+        }
+        Get-ChildItem -Path $binPath -Recurse -File | ForEach-Object {
+            $relativePath = $_.FullName.Substring((Resolve-Path $binPath).Path.Length + 1)
+            $destFile = Join-Path $binDestPath $relativePath
+            $destFolder = Split-Path -Parent $destFile
+            if (-not (Test-Path $destFolder)) {
+                New-Item -ItemType Directory -Path $destFolder -Force | Out-Null
+            }
+            Copy-Item -Path $_.FullName -Destination $destFile -Force
+            $stats.Copied++
+        }
+        Write-Info "  Copied bin tools (gsd-tools.cjs + lib/)"
+    } else {
+        Write-Skip "  bin directory not found at: $binPath"
     }
     
     # Summary
